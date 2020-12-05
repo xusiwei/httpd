@@ -25,11 +25,19 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import("//build/lite/config/component/lite_component.gni")
+static_library("httpd_test") {
+    sources = [
+        "httpd_test.c",
+        "wifi_connecter.c",
+    ]
 
-lite_component("app") {
-    features = [
-        "src:httpd",
-        "test:httpd_test"
+    include_dirs = [
+        "../include",
+        "../include/lwip/apps",
+        "//kernel/liteos_m/kal",
+        "//base/iot_hardware/interfaces/kits/wifiiot_lite",
+        "//foundation/communication/interfaces/kits/wifi_lite/wifiservice/",
+        "//vendor/hisi/hi3861/hi3861/third_party/lwip_sack/include/lwip",
+        "//vendor/hisi/hi3861/hi3861/third_party/lwip_sack/include",
     ]
 }
