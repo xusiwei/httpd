@@ -96,6 +96,7 @@
 #include "httpd_structs.h"
 #include "lwip/def.h"
 
+#include "lwip/tcp.h"
 #include "lwip/altcp.h"
 #include "lwip/altcp_tcp.h"
 #if HTTPD_ENABLE_HTTPS

@@ -29,11 +29,16 @@ static_library("httpd") {
     sources = [
         "core/altcp.c",
         "core/altcp_tcp.c",
-        # "http/altcp_proxyconnect.c",
         "http/fs.c",
         "http/httpd.c",
         "tcp_port.c",
         # "pbuf_port.c",
+    ]
+
+    defines = [
+        "LWIP_DEBUG",
+        "HTTPD_DEBUG=0xA0",
+        "LWIP_DBG_TYPES_ON=LWIP_DBG_ON",
     ]
 
     include_dirs = [
