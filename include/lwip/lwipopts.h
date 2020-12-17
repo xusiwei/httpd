@@ -32,6 +32,8 @@
 #define LWIP_ALTCP 1
 #define LWIP_ALTCP_TLS 0
 
+#define LWIP_HTTPD_CGI 1
+
 // workaround for ALTCP mempool disabled in Hi3861 SDK
 #define MEMP_ALTCP_PCB MEMP_TCP_PCB
 

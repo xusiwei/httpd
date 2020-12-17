@@ -38,6 +38,53 @@
 
 static int g_netId = -1;
 
+#ifdef LWIP_HTTPD_CGI
+
+const char *HelloHandler(int iIndex, int nParams, char *pcParam[], char *pcValue[])
+{
+    printf("HelloHandler\r\n");
+    printf("iIndex = %d\r\n", iIndex);
+    for (int i = 0; i < nParams; i++) {
+        printf("pcParam[%d] = '%s'\r\n", i, pcParam[i]);
+        printf("pcValue[%d] = '%s'\r\n", i, pcValue[i]);
+    }
+    return "/index.html"; // forward to home page.
+}
+
+static tCGI g_cgiHandlers[] = {
+    { "/hello", HelloHandler },
+};
+#endif
+
+#if LWIP_HTTPD_SSI
+u16_t FooSsiHandler(
+#if LWIP_HTTPD_SSI_RAW
+                             const char* tag,
+#else /* LWIP_HTTPD_SSI_RAW */
+                             int tag,
+#endif /* LWIP_HTTPD_SSI_RAW */
+                            char *pcInsert, int iInsertLen
+#if LWIP_HTTPD_SSI_MULTIPART
+                             , u16_t currentTagPart, u16_t *nextTagPart
+#endif /* LWIP_HTTPD_SSI_MULTIPART */
+
+#if defined(LWIP_HTTPD_FILE_STATE) && LWIP_HTTPD_FILE_STATE
+                             , void *connectionState
+#endif /* LWIP_HTTPD_FILE_STATE */
+) {
+    printf("FooSsiHandler\r\n");
+
+#if LWIP_HTTPD_SSI_RAW
+    printf("tag = %s\r\n", tag);
+#else
+    printf("tag = %d\r\n", tag);
+#endif
+    printf("insertLen = %d\r\n", iInsertLen);
+    printf("insertText = %s\r\n", pcInsert);
+    return 0;
+}
+#endif
+
 static void HttpdTask(void* arg)
 {
     (void) arg;
@@ -50,6 +97,14 @@ static void HttpdTask(void* arg)
 
     g_netId = ConnectToHotspot(&config);
     printf("netId = %d\r\n", g_netId);
+
+#ifdef LWIP_HTTPD_CGI
+    http_set_cgi_handlers(g_cgiHandlers, LWIP_ARRAYSIZE(g_cgiHandlers));
+#endif
+
+#ifdef LWIP_HTTPD_SSI
+    http_set_ssi_handler(FooSsiHandler, NULL, 0);
+#endif
 
     httpd_init();
 }
